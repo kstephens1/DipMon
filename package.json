@@ -1,0 +1,19 @@
+{
+  "name": "dipmon",
+  "version": "1.0.0",
+  "description": "Crypto Dip Detector",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kstephens1/DipMon.git"
+  },
+  "author": "Keith Stephens",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kstephens1/DipMon/issues"
+  },
+  "homepage": "https://github.com/kstephens1/DipMon#readme"
+}
