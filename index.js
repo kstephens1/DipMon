@@ -1,7 +1,22 @@
-var http = require("http");
-http.createServer(function(request,response){
-    response.writeHead(200, {'Content-Type':'text/plain'})
-    response.end('Testing\n');//end = the last thing I am sending
-}).listen(1337,'127.0.0.1');//post and IP to listen on
+var appConfig = require('./config').keys;
+const fetch = require('node-fetch');
 
-//console.log("Here");
+//get rates
+let url = "https://api.nomics.com/v1/exchange-rates?key="+ appConfig.NOMICS_KEY +"&currency=XRP";
+let settings = { method: "Get" };
+fetch(url, settings)
+    .then(res => res.json())
+    .then((json) => {
+        console.log(json);
+    });
+
+//Web Server
+// var express = require('express');
+// var app = express();
+// var port = process.env.PORT || 3000;
+
+// app.get('/',function(req,res){
+//     res.send('<html><head></head><body><h1>Express Demo</h1></body></html>');
+// } );
+
+// app.listen(port);
