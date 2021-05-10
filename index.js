@@ -1,22 +1,39 @@
 var appConfig = require('./config').keys;
-const fetch = require('node-fetch');
+var os = require("os");
 
-//get rates
-let url = "https://api.nomics.com/v1/exchange-rates?key="+ appConfig.NOMICS_KEY +"&currency=XRP";
-let settings = { method: "Get" };
-fetch(url, settings)
-    .then(res => res.json())
-    .then((json) => {
-        console.log(json);
-    });
+//Setup Web Server
+var express = require('express');
+var app = express();
+var port = process.env.PORT || 3000;
 
-//Web Server
-// var express = require('express');
-// var app = express();
-// var port = process.env.PORT || 3000;
+app.get('/metrics', function (req, res) {
+    let timestamp = Date.now();
+    const XRPRequest = require('request'),url = "https://api.nomics.com/v1/currencies/ticker?key="+ appConfig.NOMICS_KEY +"&ids=XRP,BTC,XLM,DOGE";
 
-// app.get('/',function(req,res){
-//     res.send('<html><head></head><body><h1>Express Demo</h1></body></html>');
-// } );
+    XRPRequest(url, (error, response, body)=> {
+    if (!error && response.statusCode === 200) {
+        var output;
+        const nResponse = JSON.parse(body);
+        var xrpPrice = nResponse[0].price;
+        output = "# TYPE btc gauge" + os.EOL;
+        output += "btc " + nResponse[0].price + os.EOL;
+        output += "# TYPE xrp gauge"  + os.EOL;
+        output += "xrp " + nResponse[1].price  + os.EOL;
+        output += "# TYPE doge gauge"  + os.EOL;
+        output += "doge " + nResponse[2].price  + os.EOL;
+        output += "# TYPE xlm gauge"  + os.EOL;
+        output += "xlm " + nResponse[3].price  + os.EOL;
 
-// app.listen(port);
+        res.send(output);
+
+        console.log('Got hit ' + timestamp);
+
+    } else {
+        console.log("Got an error: ", error, ", status code: ", response.statusCode)
+    }
+    })
+
+})
+
+
+app.listen(port);
